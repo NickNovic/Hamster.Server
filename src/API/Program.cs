@@ -1,4 +1,5 @@
 using API;
+using Infrastructure;
 using API.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddMediatR();
+builder.Services.AddDbContext();
 
 var app = builder.Build();
 
