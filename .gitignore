@@ -1,0 +1,7 @@
+# Ignore vscode files
+.vscode
+
+# Ignore bin, Debug, and obj folders
+[Bb]in
+[Oo]bj
+[Dd]ebug
