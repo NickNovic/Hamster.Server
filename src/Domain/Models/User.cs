@@ -1,6 +1,8 @@
+using Domain.Models.Abstractions;
+
 namespace Domain.Models;
 
-public class User
+public class User : IUser<Guid>
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }

@@ -1,6 +1,6 @@
-using Infrastructure.Models.Abstractions;
+using Domain.Models.Abstractions;
 
-namespace Infrastructure.Identity.Abstractions;
+namespace Application.Interfaces.Identity;
 
 public interface IUserManager<TUser, TKey> where TUser : IUser<TKey>
 {

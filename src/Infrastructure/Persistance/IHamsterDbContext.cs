@@ -6,6 +6,6 @@ namespace Infrastructure.Persistance;
 public interface IHamsterDbContext
 {
     
-    public DbSet<User> Users { get; set; }
+    public DbSet<IdentityUser> Users { get; set; }
     public Task SaveChangesAsync();
 }
