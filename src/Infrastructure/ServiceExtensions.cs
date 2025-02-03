@@ -1,5 +1,6 @@
 using Application.Interfaces.Identity;
 using Domain.Models;
+using Infrastructure.Helpers.Hash;
 using Infrastructure.Identity;
 using Infrastructure.Persistance;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ public static class ServiceExtensions
     public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
         services.AddScoped<IUserManager, UserManager>();
+        services.AddScoped<IHashingProvier, Sha256HasingProvider>();
 
         return services;
     }

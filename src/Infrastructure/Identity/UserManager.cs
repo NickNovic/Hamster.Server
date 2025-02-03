@@ -5,13 +5,16 @@ using AutoMapper;
 using Infrastructure.Persistance.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Application.Common;
+using System.Security.Cryptography;
+using Infrastructure.Helpers.Hash;
 
 namespace Infrastructure.Identity;
 public class UserManager : IUserManager
 {
     private readonly IHamsterDbContext _dbContext;
     private readonly IMapper _mapper;
-    public UserManager(IHamsterDbContext dbContext)
+    private readonly IHashingProvier _hashingProvier;
+    public UserManager(IHamsterDbContext dbContext, IHashingProvier hashingProvier)
     {
         _dbContext = dbContext;
         _mapper = new MapperConfiguration(cfg => 
@@ -19,6 +22,7 @@ public class UserManager : IUserManager
             cfg.CreateMap<DbUser, User>();
             cfg.CreateMap<User, DbUser>();
         }).CreateMapper();
+        _hashingProvier = hashingProvier;
     }
     public async Task<Result<Guid>> CreateUserAsync(User user)
     {
@@ -29,7 +33,7 @@ public class UserManager : IUserManager
         }
 
         DbUser dbUser = _mapper.Map<DbUser>(user);
-        dbUser.PasswordHash = user.Password + "HASHED"; //TODO: Hash the password
+        dbUser.PasswordHash = _hashingProvier.ComputeHash(user.Password);
 
         _dbContext.Users.Add(dbUser);
 
