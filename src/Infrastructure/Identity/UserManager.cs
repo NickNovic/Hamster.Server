@@ -39,7 +39,7 @@ public class UserManager : IUserManager
 
         await _dbContext.SaveChangesAsync();
         
-        return Result<Guid>.Success(user.Id);
+        return Result<Guid>.Success(dbUser.Id);
     }
 
     public Task<Result<object>> DeleteUserByIdAsync(Guid id)
