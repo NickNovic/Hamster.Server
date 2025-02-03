@@ -1,28 +1,30 @@
+using Application.Common;
 using Application.Interfaces.Identity;
 using Domain.Models;
 using MediatR;
 
 namespace Application.UseCases.Commands.Auth.Register;
 
-public class RegisterHandler : IRequestHandler<RegisterCommand>
+public class RegisterHandler : IRequestHandler<RegisterCommand, Result<Guid>>
 {
-    private readonly IUserManager<User, Guid> _userManager;
-    public RegisterHandler(IUserManager<User, Guid> userManager)
+    private readonly IUserManager _userManager;
+    public RegisterHandler(IUserManager userManager)
     {
         _userManager = userManager;
     }
     
-    public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        User user = new User{
+        User user = new User
+        {
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
             Password = request.Password
         };
         
-        await _userManager.CreateUserAsync(user);
+        Result<Guid> result = await _userManager.CreateUserAsync(user);
 
-//        return user.Id;
+        return result;
     }
 }

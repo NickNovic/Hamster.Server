@@ -3,6 +3,7 @@ using API.Endpoints.Auth.Dtos;
 using MediatR;
 using Application.UseCases.Commands.Auth.Register;
 using Microsoft.AspNetCore.Mvc;
+using Application.Common;
 
 namespace API.Endpoints.Auth;
 
@@ -21,15 +22,17 @@ public class AuthGroup : EndpointGroup
         {
             await Task.CompletedTask;
         });
-        group.MapPost("/register", async (RegisterDto dto,IMediator _mediator) =>
+        group.MapPost("/register", async (RegisterDto dto, IMediator _mediator) =>
         {
-            await _mediator.Send(new RegisterCommand
+            Result<Guid> result = await _mediator.Send(new RegisterCommand
             {
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
                 Password = dto.Password
             });
+
+            return Results.Content(result.Data.ToString(), "application/json", null, ReturnCodes.Codes[result.Error]);
         });
     }   
 }

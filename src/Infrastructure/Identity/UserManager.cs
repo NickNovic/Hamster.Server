@@ -3,6 +3,8 @@ using Domain.Models;
 using Infrastructure.Persistance;
 using AutoMapper;
 using Infrastructure.Persistance.DbModels;
+using Microsoft.EntityFrameworkCore;
+using Application.Common;
 
 namespace Infrastructure.Identity;
 public class UserManager : IUserManager
@@ -18,26 +20,35 @@ public class UserManager : IUserManager
             cfg.CreateMap<User, DbUser>();
         }).CreateMapper();
     }
-    public async Task<Guid> CreateUserAsync(User user)
+    public async Task<Result<Guid>> CreateUserAsync(User user)
     {
+        DbUser emailUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+        if (emailUser is not null)
+        {
+            return Result<Guid>.Fail(Message.UserAlreadyExists);
+        }
+
         DbUser dbUser = _mapper.Map<DbUser>(user);
-        dbUser.PasswordHash = user.Password;
-        
+        dbUser.PasswordHash = user.Password + "HASHED"; //TODO: Hash the password
+
         _dbContext.Users.Add(dbUser);
 
         await _dbContext.SaveChangesAsync();
         
-        return user.Id;
+        return Result<Guid>.Success(user.Id);
     }
-    public Task DeleteUserByIdAsync(Guid id)
+
+    public Task<Result<object>> DeleteUserByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }
-    public Task<User> GetUserByEmailAsync(string email)
+
+    public Task<Result<User>> GetUserByEmailAsync(string email)
     {
         throw new NotImplementedException();
     }
-    public Task<User> GetUserByIdAsync(Guid id)
+
+    public Task<Result<User>> GetUserByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(HamsterDbContext))]
-    [Migration("20250130155648_migration-1")]
-    partial class migration1
+    [Migration("20250203105210_m-1")]
+    partial class m1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,13 +25,10 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Infrastructure.Models.Container", b =>
+            modelBuilder.Entity("Infrastructure.Persistance.DbModels.DbContainer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("IdentityUserId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -40,18 +37,13 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdentityUserId");
-
-                    b.ToTable("Container");
+                    b.ToTable("Containers");
                 });
 
-            modelBuilder.Entity("Infrastructure.Models.Device", b =>
+            modelBuilder.Entity("Infrastructure.Persistance.DbModels.DbDevice", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("IdentityUserId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -60,12 +52,10 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdentityUserId");
-
-                    b.ToTable("Device");
+                    b.ToTable("Devices");
                 });
 
-            modelBuilder.Entity("Infrastructure.Models.IdentityUser", b =>
+            modelBuilder.Entity("Infrastructure.Persistance.DbModels.DbUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,27 +80,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.Container", b =>
-                {
-                    b.HasOne("Infrastructure.Models.IdentityUser", null)
-                        .WithMany("Containers")
-                        .HasForeignKey("IdentityUserId");
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.Device", b =>
-                {
-                    b.HasOne("Infrastructure.Models.IdentityUser", null)
-                        .WithMany("Devices")
-                        .HasForeignKey("IdentityUserId");
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.IdentityUser", b =>
-                {
-                    b.Navigation("Containers");
-
-                    b.Navigation("Devices");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,26 +3,26 @@ namespace Application.Common;
 public class Result<T>
 {
     public T? Data { get; protected set; }
-    public string? Message { get; protected set; }
+    public Message Error { get; protected set; }
     public bool IsSuccess { get; protected set; }
     protected Result(T data)
     {
         Data = data;
-        Message = string.Empty;
+        Error = Common.Message.Success;
         IsSuccess = true;
     }
-    protected Result(string message)
+    protected Result(Message error)
     {
         Data = default;
-        Message = message;
+        Error = error;
         IsSuccess = false;
     }
     public static Result<T> Success(T data)
     {
         return new Result<T>(data);
     }
-    public static Result<T> Fail(string message)
+    public static Result<T> Fail(Message error)
     {
-        return new Result<T>(message);
+        return new Result<T>(error);
     }
 }
