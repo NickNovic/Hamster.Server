@@ -5,7 +5,6 @@ using AutoMapper;
 using Infrastructure.Persistance.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Application.Common;
-using System.Security.Cryptography;
 using Infrastructure.Helpers.Hash;
 
 namespace Infrastructure.Identity;
@@ -39,7 +38,7 @@ public class UserManager : IUserManager
 
         await _dbContext.SaveChangesAsync();
         
-        return Result<Guid>.Success(dbUser.Id);
+        return Result<Guid>.Success(dbUser.Id, Message.Created);
     }
 
     public Task<Result<object>> DeleteUserByIdAsync(Guid id)
@@ -47,13 +46,30 @@ public class UserManager : IUserManager
         throw new NotImplementedException();
     }
 
-    public Task<Result<User>> GetUserByEmailAsync(string email)
+    public async Task<Result<User>> GetUserByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        DbUser? user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user is null)
+        {
+            return Result<User>.Fail(Message.InvalidEmail);
+        }
+
+        User resultUser = _mapper.Map<User>(user);
+        return Result<User>.Success(resultUser, Message.Success);
     }
 
     public Task<Result<User>> GetUserByIdAsync(Guid id)
     {
         throw new NotImplementedException();
+    }
+    public async Task<bool> CheckPasswordAsync(Guid id, string password)
+    {
+        DbUser? user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if (user is null)
+        {
+            return false;
+        }
+
+        return _hashingProvier.ComputeHash(password) == user.PasswordHash;
     }
 }

@@ -17,9 +17,13 @@ public class Result<T>
         Error = error;
         IsSuccess = false;
     }
-    public static Result<T> Success(T data)
+    public static Result<T> Success(T data, Message message)
     {
         return new Result<T>(data);
+    }
+    public static Result<T> Success(Message message)
+    {
+        return new Result<T>(Message.Success);
     }
     public static Result<T> Fail(Message error)
     {

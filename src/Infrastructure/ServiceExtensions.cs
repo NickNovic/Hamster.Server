@@ -1,8 +1,9 @@
 using Application.Interfaces.Identity;
-using Domain.Models;
 using Infrastructure.Helpers.Hash;
+using Infrastructure.Helpers.Jwt;
 using Infrastructure.Identity;
 using Infrastructure.Persistance;
+using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -19,6 +20,12 @@ public static class ServiceExtensions
     {
         services.AddScoped<IUserManager, UserManager>();
         services.AddScoped<IHashingProvier, Sha256HasingProvider>();
+
+        return services;
+    }
+    public static IServiceCollection AddJwtTokenHelper(this IServiceCollection services)
+    {
+        services.AddScoped<IJwtTokenHelper, JwtTokenHelper>();
 
         return services;
     }

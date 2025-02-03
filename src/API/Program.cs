@@ -13,6 +13,8 @@ builder.Services.AddMediatR();
 builder.Services.AddDbContext();
 
 builder.Services.AddIdentity();
+builder.Services.AddJwtAuthentication();
+builder.Services.AddJwtTokenHelper();
 
 builder.Services.Configure<HamsterDbContextOptions>(builder.Configuration.GetSection("HamsterDbContextOptions"));
 

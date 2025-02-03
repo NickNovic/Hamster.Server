@@ -9,4 +9,5 @@ public interface IUserManager
     public Task<Result<User>> GetUserByIdAsync(Guid id);
     public Task<Result<User>> GetUserByEmailAsync(string email);
     public Task<Result<object>> DeleteUserByIdAsync(Guid id);
+    public Task<bool> CheckPasswordAsync(Guid id, string password);
 }

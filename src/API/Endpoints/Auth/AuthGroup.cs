@@ -2,7 +2,7 @@ using API.Endpoints.Abstractions;
 using API.Endpoints.Auth.Dtos;
 using MediatR;
 using Application.UseCases.Commands.Auth.Register;
-using Microsoft.AspNetCore.Mvc;
+using Application.UseCases.Commands.Auth.Login;
 using Application.Common;
 
 namespace API.Endpoints.Auth;
@@ -18,9 +18,15 @@ public class AuthGroup : EndpointGroup
 
     public override void MapEndpoints(RouteGroupBuilder group)
     {
-        group.MapPost("/login", async (HttpContext context) =>
+        group.MapPost("/login", async (LoginDto dto, IMediator _mediator) =>
         {
-            await Task.CompletedTask;
+            Result<string> result = await _mediator.Send(new LoginCommand
+            {
+                Email = dto.Email,
+                Password = dto.Password
+            });
+
+            return Results.Content(result.Data.ToString(), "application/json", null, ReturnCodes.Codes[result.Error]);
         });
         group.MapPost("/register", async (RegisterDto dto, IMediator _mediator) =>
         {
