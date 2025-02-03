@@ -16,7 +16,7 @@ public static class ServiceExtensions
     }
     public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
-        services.AddScoped<IUserManager<User, Guid>, UserManager>();
+        services.AddScoped<IUserManager, UserManager>();
 
         return services;
     }

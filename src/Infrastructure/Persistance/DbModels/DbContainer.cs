@@ -1,6 +1,6 @@
-namespace Infrastructure.Models;
+namespace Infrastructure.Persistance.DbModels;
 
-public class Container
+public class DbContainer
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }

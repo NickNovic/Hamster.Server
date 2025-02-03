@@ -1,11 +1,11 @@
-using Domain.Models.Abstractions;
+using Domain.Models;
 
 namespace Application.Interfaces.Identity;
 
-public interface IUserManager<TUser, TKey> where TUser : IUser<TKey>
+public interface IUserManager
 {
-    public Task<TKey> CreateUserAsync(TUser user);
-    public Task<TUser> GetUserByIdAsync(TKey id);
-    public Task<TUser> GetUserByEmailAsync(string email);
-    public Task DeleteUserByIdAsync(TKey id);
+    public Task<Guid> CreateUserAsync(User user);
+    public Task<User> GetUserByIdAsync(Guid id);
+    public Task<User> GetUserByEmailAsync(string email);
+    public Task DeleteUserByIdAsync(Guid id);
 }

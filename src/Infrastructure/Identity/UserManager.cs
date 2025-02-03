@@ -1,21 +1,29 @@
 using Application.Interfaces.Identity;
 using Domain.Models;
-using Infrastructure.Models;
 using Infrastructure.Persistance;
 using AutoMapper;
+using Infrastructure.Persistance.DbModels;
 
 namespace Infrastructure.Identity;
-public class UserManager : IUserManager<User, Guid>
+public class UserManager : IUserManager
 {
     private readonly IHamsterDbContext _dbContext;
+    private readonly IMapper _mapper;
     public UserManager(IHamsterDbContext dbContext)
     {
         _dbContext = dbContext;
+        _mapper = new MapperConfiguration(cfg => 
+        {
+            cfg.CreateMap<DbUser, User>();
+            cfg.CreateMap<User, DbUser>();
+        }).CreateMapper();
     }
     public async Task<Guid> CreateUserAsync(User user)
     {
-        IdentityUser identityUser = IdentityUser.CreateFromUser(user);
-        _dbContext.Users.Add(identityUser);
+        DbUser dbUser = _mapper.Map<DbUser>(user);
+        dbUser.PasswordHash = user.Password;
+        
+        _dbContext.Users.Add(dbUser);
 
         await _dbContext.SaveChangesAsync();
         

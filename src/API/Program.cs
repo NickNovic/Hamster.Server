@@ -1,6 +1,7 @@
 using API;
 using Infrastructure;
 using API.Endpoints;
+using Infrastructure.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddMediatR();
 builder.Services.AddDbContext();
 
 builder.Services.AddIdentity();
+
+builder.Services.Configure<HamsterDbContextOptions>(builder.Configuration.GetSection("HamsterDbContextOptions"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
-namespace Infrastructure.Models;
+namespace Infrastructure.Persistance.DbModels;
 
-public class Role
+public class DbDevice
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }

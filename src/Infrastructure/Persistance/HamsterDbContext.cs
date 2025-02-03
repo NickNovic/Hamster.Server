@@ -1,12 +1,22 @@
-using Infrastructure.Models;
+using Infrastructure.Persistance.DbModels;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.Options;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Persistance;
 
 public class HamsterDbContext : DbContext, IHamsterDbContext
 {
-    public DbSet<IdentityUser> Users { get; set; }
+    public DbSet<DbUser> Users { get; set; }
+    public DbSet<DbContainer> Containers { get; set; }
+    public DbSet<DbDevice> Devices { get; set; }
 
+    private readonly HamsterDbContextOptions _dbContextOptions;
+
+    public HamsterDbContext(IOptions<HamsterDbContextOptions> dbContextOptions)
+    {
+        _dbContextOptions = dbContextOptions.Value;
+    }
     public Task SaveChangesAsync()
     {
         return base.SaveChangesAsync();
@@ -14,10 +24,10 @@ public class HamsterDbContext : DbContext, IHamsterDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=HamsterDb;Username=postgres;Password=");
+        optionsBuilder.UseNpgsql(_dbContextOptions.ConnectionString);
     }
-    protected override void OnModelCreating(ModelBuilder modelBuilder){
-        modelBuilder.Entity<IdentityUser>().ToTable("Users");
-        modelBuilder.Entity<IdentityUser>().Ignore(c => c.Password);
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<DbUser>().ToTable("Users");
     }
 }
